@@ -1,2 +1,4 @@
-# Embedded_SmartFan
+-Smart Fan
+Embedded System Project
 STM32F104
+IAR 
