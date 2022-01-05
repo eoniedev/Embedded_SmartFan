@@ -1,4 +1,4 @@
-#Smart Fan
-Embedded System Project\n
-STM32F104
+# Smart Fan
+This is Embedded System Project.
+-STM32F104
  
