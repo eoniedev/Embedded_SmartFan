@@ -36,29 +36,25 @@
 #define DRIVER_PORT1 GPIO_Pin_1
 #define DRIVER_PORT2 GPIO_Pin_8
 
-
 //서보모터
 #define SERVO_PORT GPIOB
 #define SERVO_PIN GPIO_Pin_0
 
 
-typedef enum { // 선풍기 풍속조절 타입 선언
+typedef enum { // 선풍기 풍속조절 
    low,
    medium,
    high,
    stop,
-}fan;
+}Fan;
 
-typedef enum { //  선풍기 방향조절 타입
+typedef enum { //  선풍기 방향조절 
   left,
   right,
   front,
   all
-}direct;
+}Direct;
 
-void Delay(uint32_t delayTime);
-void delay(uint16_t time);
-void delay_s(uint16_t time);
 void RCC_Configure(void);
 void GPIO_Configure(void);
 void NVIC_Configure(void);
@@ -79,3 +75,6 @@ void USART1_IRQHandler(void);
 void USART2_Init(void);
 void sendDataUART1(uint16_t data);
 void sendDataUART2(uint16_t data);
+void Delay(uint32_t delayTime);
+void delay(uint16_t time);
+void delay_s(uint16_t time);

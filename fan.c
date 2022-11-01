@@ -1,22 +1,22 @@
 #include "fan.h"
 #include "lcd.h"
 
-uint32_t current_time = 0; // 현재시각
+uint32_t current_time = 0;                                  // 현재시각
 TIM_OCInitTypeDef TIM_OCInitStructureServo;
-  TIM_OCInitTypeDef TIM_OCInitStructureDC;
+TIM_OCInitTypeDef TIM_OCInitStructureDC;
   
 void RCC_Configure(void){
-   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOE, ENABLE);   // RCC GPIO E
-   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);    // RCC GPIO C
-   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);   // RCC GPIO B
-   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);    // RCC GPIO A
-   RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOE, ENABLE);   // RCC GPIO E
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);    // RCC GPIO C
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);   // RCC GPIO B
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);    // RCC GPIO A
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
    
-  // TIM clock enable
-   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE); //온습도 delay TIM
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);  //dc모터 pulse TIM
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);  // 서보모터 pulse TIM
-   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);  //초음파센서 delay TIM
+    // TIM clock enable
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);    //온습도 delay TIM
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);    //dc모터 pulse TIM
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);    //서보모터 pulse TIM
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);    //초음파센서 delay TIM
    
     /* USART1 clock enable */
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
@@ -66,7 +66,6 @@ void GPIO_Configure(void){
 }
 
 void NVIC_Configure(void) {
-
     NVIC_InitTypeDef NVIC_InitStructure;
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 
@@ -80,22 +79,21 @@ void NVIC_Configure(void) {
     
     // TIMER 3
     NVIC_EnableIRQ(TIM3_IRQn);
-  NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
+    NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
   
-   // TIMER 5
+    // TIMER 5
+    NVIC_EnableIRQ(TIM5_IRQn);
+    NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
   
-  NVIC_EnableIRQ(TIM5_IRQn);
-  NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-  
-  // UART1
+    // UART1
     NVIC_EnableIRQ(USART1_IRQn);
     NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; // TODO
@@ -103,21 +101,17 @@ void NVIC_Configure(void) {
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
     
-  // UART2
+    // UART2
     NVIC_EnableIRQ(USART2_IRQn);
     NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; // TODO
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0; // TODO
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
-
 }
 
-void Time_Configure(void) 
-{
-  //set 1us
-    
-  // TIMER 2 ENABLE
+void Time_Configure(void) {
+    // TIMER 2 ENABLE
     TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
     TIM_TimeBaseStructure.TIM_Prescaler = 72;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -168,7 +162,8 @@ void Time_Configure(void)
     TIM_Cmd(TIM4, ENABLE);
 }
 
-void TIM2_IRQHandler(void){ // TIM2 Handler
+// TIM2 Handler
+void TIM2_IRQHandler(void){ 
     if(TIM_GetITStatus(TIM2,TIM_IT_Update)!=RESET){
         current_time++;
         TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
@@ -178,8 +173,7 @@ void TIM2_IRQHandler(void){ // TIM2 Handler
 /**************************************************************************************************/
 /********************************************온습도센서********************************************/
 /**************************************************************************************************/
-void DC_Set_Pin_Output (GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
-{
+void DC_Set_Pin_Output (GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin) {
     GPIO_InitTypeDef GPIO_InitStruct;
     GPIO_InitStruct.GPIO_Pin = GPIO_Pin;
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP;
@@ -187,18 +181,16 @@ void DC_Set_Pin_Output (GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
     GPIO_Init(GPIOx, &GPIO_InitStruct);
 }
 
-
-void DC_Set_Pin_Input (GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
-{
+// 온습도에 사용하는 data pin을 input, output 모두 사용하기 위한 GPIO 함수 재정의 
+void DC_Set_Pin_Input (GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin) {
     GPIO_InitTypeDef GPIO_InitStruct;
     GPIO_InitStruct.GPIO_Pin = GPIO_Pin;
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU;
     GPIO_Init(GPIOx, &GPIO_InitStruct);
 }
- // 온습도에 사용하는 data pin을 input, output 모두 사용하기 위한 GPIO 함수 재정의 
 
-void DHT11_Start (void) // 18ms 대기 후 통신 시작
-{
+// 18ms 대기 후 통신 시작 
+void DHT11_Start (void) {
     DC_Set_Pin_Output (DHT11_PORT, DHT11_PIN);  // set the pin as output
     GPIO_ResetBits(DHT11_PORT, DHT11_PIN);   // pull the pin low
     delay (18000);   // wait for 18ms
@@ -207,8 +199,8 @@ void DHT11_Start (void) // 18ms 대기 후 통신 시작
     DC_Set_Pin_Input(DHT11_PORT, DHT11_PIN);    // set as input
 }
 
-uint8_t DHT11_Check_Response (void) // 온습도센서 pin response check
-{
+// 온습도센서 pin response check
+uint8_t DHT11_Check_Response (void) {
     uint8_t Response = 0;
     delay (40);
     if (!(GPIO_ReadInputDataBit(DHT11_PORT, DHT11_PIN)))
@@ -221,8 +213,8 @@ uint8_t DHT11_Check_Response (void) // 온습도센서 pin response check
     return Response;
 }
 
-uint8_t DHT11_Read (void) // 40bit data 읽어오기 위해 8bit씩 총 5번 호출
-{
+// 40bit data 읽어오기 위해 8bit씩 총 5번 호출
+uint8_t DHT11_Read (void) {
     uint8_t i,j;
     for (j=0;j<8;j++)
     {
@@ -238,7 +230,8 @@ uint8_t DHT11_Read (void) // 40bit data 읽어오기 위해 8bit씩 총 5번 호출
     return i;
 }
 
-void GetValue(float *Temp, float *Rh){ // 온습도 센서 측정값 저장
+// 온습도 센서 측정값 저장
+void GetValue(float *Temp, float *Rh){ 
     uint8_t Rh_byte1, Rh_byte2, Temp_byte1, Temp_byte2;
     uint16_t SUM, RH, TEMP;
     uint8_t Presence = 0;
@@ -256,6 +249,7 @@ void GetValue(float *Temp, float *Rh){ // 온습도 센서 측정값 저장
     *Temp = (float)TEMP;
     *Rh = (float)RH;
 }
+
 /**************************************************************************************************/
 /**********************************************서보모터********************************************/
 /**************************************************************************************************/
@@ -263,27 +257,32 @@ void SetPulse(uint32_t pulse){ // 서보모터 방향 제어
     TIM_OCInitStructureServo.TIM_Pulse = pulse; // us
     TIM_OC3Init(TIM3, &TIM_OCInitStructureServo);
 }
+
 /**************************************************************************************************/
 /***********************************************DC모터********************************************/
 /**************************************************************************************************/
-void SetSpeed(uint32_t speed){ // dc모터 속도 제어
+
+// dc모터 속도 제어
+void SetSpeed(uint32_t speed){
     GPIO_ResetBits(GPIOB, GPIO_Pin_1);
     TIM_OCInitStructureDC.TIM_Pulse = speed; // us
     TIM_OC3Init(TIM4, &TIM_OCInitStructureDC);
 }
-void stopMotor(){ // dc모터 정지
+// dc모터 정지
+void stopMotor(){ 
     TIM_OCInitStructureDC.TIM_Pulse = 0; // us
     TIM_OC3Init(TIM4, &TIM_OCInitStructureDC);
     GPIO_ResetBits(GPIOB, GPIO_Pin_1);
 }
+
 /***************************************************************************************************/
 
-void sendDataUART1(uint16_t data) { // putty로 data 전송
+// putty로 data 전송
+void sendDataUART1(uint16_t data) { 
     USART_SendData(USART1, data);
 }
 
-void USART1_Init(void)
-{
+void USART1_Init(void){
     USART_InitTypeDef USART1_InitStructure;
     USART_Cmd(USART1, ENABLE);
 
@@ -297,7 +296,8 @@ void USART1_Init(void)
     USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 }
 
-void USART1_IRQHandler() { // uart1 handler
+// uart1 handler
+void USART1_IRQHandler() { 
     uint16_t word;
     if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET) {
         word = USART_ReceiveData(USART1);
@@ -306,7 +306,8 @@ void USART1_IRQHandler() { // uart1 handler
     }
 }
 
-void sendDataUART2(uint16_t data) { // phone bluetooth data 전송
+// phone bluetooth data 전송
+void sendDataUART2(uint16_t data) { 
     USART_SendData(USART2, data);
 }
 
@@ -327,8 +328,9 @@ void USART2_Init(void) {
 /**************************************************************************************************/
 /********************************************초음파센서********************************************/
 /**************************************************************************************************/
+
+// 초음파센서 pin setting
 void USW_Set_Pin(GPIO_TypeDef *GPIOx, uint16_t TRIG_PIN, uint16_t ECHO_PIN){
-  // 초음파센서 pin setting 
     GPIO_InitTypeDef GPIO_InitStructure;
     GPIO_InitStructure.GPIO_Pin = TRIG_PIN; // TRIG 
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -340,8 +342,8 @@ void USW_Set_Pin(GPIO_TypeDef *GPIOx, uint16_t TRIG_PIN, uint16_t ECHO_PIN){
     GPIO_Init(GPIOx, &GPIO_InitStructure);
 }
 
+// 초음파센서 거리측정
 int ReadDistance(GPIO_TypeDef* GPIOx, uint16_t TRIG_PIN, uint16_t ECHO_PIN) {
-  // 초음파센서 거리측정
     uint32_t prev_time = 0;
     USW_Set_Pin(GPIOx, TRIG_PIN, ECHO_PIN);
     GPIO_SetBits(GPIOx, TRIG_PIN); // trig pin set
