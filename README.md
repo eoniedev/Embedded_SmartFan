@@ -6,4 +6,4 @@ Smart fan Project that automatically detects movement and works using sensers
 - ARM Cortex-M3: STM32F107
 - C Language
 - J-link debugger
-- use IAR Embedded Workbench
+- IAR Embedded Workbench
