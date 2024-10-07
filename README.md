@@ -1,5 +1,4 @@
 # Smart Fan
-This is Embedded System Project.
 ## Introduction
 Smart fan Project that automatically detects movement and works using sensers
 ## Environment
@@ -7,3 +6,4 @@ Smart fan Project that automatically detects movement and works using sensers
 - C Language
 - J-link debugger
 - IAR Embedded Workbench
+  
